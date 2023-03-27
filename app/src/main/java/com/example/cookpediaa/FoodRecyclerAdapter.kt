@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -14,6 +16,7 @@ class FoodRecyclerAdapter(val foodList:ArrayList<Food>):RecyclerView.Adapter<Foo
         val image = itemView.findViewById<ShapeableImageView>(R.id.image)
         val nomi = itemView.findViewById<TextView>(R.id.nomi)
         val soni = itemView.findViewById<TextView>(R.id.soni)
+        val main = itemView.findViewById<View>(R.id.main)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -35,6 +38,8 @@ class FoodRecyclerAdapter(val foodList:ArrayList<Food>):RecyclerView.Adapter<Foo
             error(R.drawable.ic_launcher_background)
         }
         holder.nomi.text = food.name
-        holder.soni.text = "${holder.soni}  recipes"
+        holder.soni.text = "${food.count}  recipes"
+
+//        holder.main.startAnimation(AnimationUtils.loadAnimation())
     }
 }
