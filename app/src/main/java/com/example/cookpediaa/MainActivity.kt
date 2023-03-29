@@ -1,8 +1,10 @@
 package com.example.cookpediaa
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookpediaa.databinding.ActivityMainBinding
 
@@ -20,9 +22,38 @@ class MainActivity : AppCompatActivity() {
         recycler = binding.foodrecycler
 
         recycler.layoutManager = GridLayoutManager(applicationContext, 2)
-        recycler.adapter = FoodRecyclerAdapter(getFood())
+        val mainAdapter = FoodRecyclerAdapter(getFood(), this)
+        recycler.adapter = mainAdapter
+
+        val itemTouchHelper = object : Callback(){
+            override fun getMovementFlags(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val dragFlags = UP or DOWN or RIGHT or LEFT
+                val swipeFlags = RIGHT or LEFT
+                return makeMovementFlags(dragFlags, swipeFlags)
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                mainAdapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
+                return true
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                mainAdapter.onItemDismiss(viewHolder.adapterPosition)
+            }
 
 
+
+        }
+        val itemTouch = ItemTouchHelper(itemTouchHelper)
+        itemTouch.attachToRecyclerView(recycler)
+        recycler.adapter = mainAdapter
 
 
     }
